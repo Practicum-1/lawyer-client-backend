@@ -16,6 +16,7 @@ func setupRoutes(app *fiber.App) {
 	routes.ClientRoutes(app.Group("/client"))
 	routes.LawyerRoutes(app.Group("/lawyer"))
 	routes.RequestRoutes(app.Group("/request"))
+	routes.PublicRoutes(app.Group("/public"))
 }
 
 func main() {
