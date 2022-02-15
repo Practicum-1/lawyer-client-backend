@@ -7,6 +7,7 @@ import (
 	"github.com/Practicum-1/lawyer-client-backend.git/db"
 	"github.com/Practicum-1/lawyer-client-backend.git/models"
 	"github.com/Practicum-1/lawyer-client-backend.git/routes"
+	"github.com/Practicum-1/lawyer-client-backend.git/seeds"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/joho/godotenv"
@@ -29,6 +30,7 @@ func main() {
 
 	db.ConnectDB()
 	models.Migrate()
+	seeds.RunSeeds()
 
 	app := fiber.New()
 
