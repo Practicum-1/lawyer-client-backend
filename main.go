@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/Practicum-1/lawyer-client-backend.git/db"
+	"github.com/Practicum-1/lawyer-client-backend.git/models"
 	"github.com/Practicum-1/lawyer-client-backend.git/routes"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -25,6 +26,7 @@ func main() {
 	}
 
 	db.ConnectDB()
+	models.Migrate()
 
 	app := fiber.New()
 

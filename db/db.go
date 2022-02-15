@@ -3,7 +3,6 @@ package db
 import (
 	"fmt"
 
-	"github.com/Practicum-1/lawyer-client-backend.git/models"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -25,7 +24,5 @@ func GetDB() *gorm.DB {
 }
 
 func ConnectDB() {
-	Connect()                        // Connect to MySQL database.
-	db := GetDB()                    // Get the database connection.
-	db.AutoMigrate(&models.Lawyer{}) // Migrate the Book table.
+	Connect() // Connect to MySQL database.
 }
