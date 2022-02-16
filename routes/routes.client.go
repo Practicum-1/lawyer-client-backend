@@ -10,6 +10,5 @@ import (
 func ClientRoutes(app fiber.Router) error {
 	fmt.Printf("%T", app)
 	app.Get("/", controller.GetClientById)
-
 	return nil
 }
