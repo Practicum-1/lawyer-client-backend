@@ -19,3 +19,12 @@ func GetClientById(id uint64, client *models.Client) error {
 	}
 	return nil
 }
+
+func CreateUser(user *models.Client) error {
+	db := db.GetDB()
+	if err := db.Create(&user).Error; err != nil {
+		return err
+	}
+	return nil
+
+}
