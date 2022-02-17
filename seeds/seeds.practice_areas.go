@@ -3,10 +3,14 @@ package seeds
 import "github.com/Practicum-1/lawyer-client-backend.git/models"
 
 func SeedPracticeArea() {
-	DB.Model(&models.PracticeArea{}).Create(practice_area)
+	var count int64
+	DB.Model(&models.PracticeArea{}).Count(&count)
+	if count == 0 {
+		DB.Model(&models.PracticeArea{}).Create(practice_areas)
+	}
 }
 
-var practice_area []models.PracticeArea = []models.PracticeArea{
+var practice_areas []models.PracticeArea = []models.PracticeArea{
 	{Name: "Personal"},
 	{Name: "Divorce"},
 	{Name: "Family Dispute"},

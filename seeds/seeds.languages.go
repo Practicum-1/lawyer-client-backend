@@ -3,10 +3,14 @@ package seeds
 import "github.com/Practicum-1/lawyer-client-backend.git/models"
 
 func SeedLanguages() {
-	DB.Model(&models.Language{}).Create(language)
+	var count int64
+	DB.Model(&models.Language{}).Count(&count)
+	if count == 0 {
+		DB.Model(&models.Language{}).Create(languages)
+	}
 }
 
-var language []models.Language = []models.Language{
+var languages []models.Language = []models.Language{
 	{Name: "Assamese"},
 	{Name: "Bengali"},
 	{Name: "Bodo"},

@@ -5,7 +5,11 @@ import (
 )
 
 func SeedCourts() {
-	DB.Model(&models.Court{}).Create(courts)
+	var count int64
+	DB.Model(&models.Court{}).Count(&count)
+	if count == 0 {
+		DB.Model(&models.Court{}).Create(courts)
+	}
 }
 
 var courts []models.Court = []models.Court{
