@@ -7,6 +7,4 @@ import (
 
 func AuthRoutes(app fiber.Router) {
 	app.Post("/login", controllers.Login)
-	app.Post("/signup", controllers.SignUp)
-
 }
