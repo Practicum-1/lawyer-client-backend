@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -37,10 +38,14 @@ func main() {
 	app.Use(logger.New())
 
 	app.Get("/", func(c *fiber.Ctx) error {
-		return c.Status(fiber.StatusOK).JSON(fiber.Map{"msg": "server running on"})
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{"msg": fmt.Sprintf("server running on %s", os.Getenv("PORT"))})
 	})
 
 	setupRoutes(app)
 
-	log.Fatal(app.Listen(os.Getenv("PORT")))
+	err = app.Listen(os.Getenv("PORT"))
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("server running on", os.Getenv("PORT"))
 }
