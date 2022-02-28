@@ -1,70 +1,46 @@
 package controllers
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"github.com/Practicum-1/lawyer-client-backend.git/helpers"
+	"github.com/Practicum-1/lawyer-client-backend.git/models"
+	"github.com/Practicum-1/lawyer-client-backend.git/repositories"
+	"github.com/gofiber/fiber/v2"
+)
 
-// import (
-// 	"github.com/Practicum-1/lawyer-client-backend.git/models"
-// 	"github.com/Practicum-1/lawyer-client-backend.git/repositories"
-// 	"github.com/gofiber/fiber/v2"
-// 	"golang.org/x/crypto/bcrypt"
-// )
+func ClientLogin(c *fiber.Ctx) error {
 
-// func hashPassword(password string) (string, error) {
-// 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
-// 	return string(bytes), err
-// }
+	type LoginInput struct {
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+	var input LoginInput
+	var client models.Client
 
-func Login(c *fiber.Ctx) error {
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{"msg": "Login "})
+	//Parse the body
+	if err := c.BodyParser(&input); err != nil {
+		return helpers.SendResponse(c, fiber.StatusBadRequest, "Invalid input", err)
+	}
+
+	// check if user exist
+	err := repositories.GetUserByEmail(&client, input.Email)
+
+	if err != nil {
+		return helpers.SendResponse(c, fiber.StatusUnauthorized, "Invalid Email or Password", nil)
+	}
+
+	// check if password is correct
+	if !helpers.CheckPasswordHash(input.Password, client.Password) {
+		return helpers.SendResponse(c, fiber.StatusUnauthorized, "Invalid Email or Password", nil)
+	}
+
+	//Generate token
+	token, err := helpers.GenerateToken(client.ID, client.Email)
+	if err != nil {
+		return helpers.SendResponse(c, fiber.StatusBadRequest, "Failed to generate token", err)
+	}
+
+	//create map string interface
+	response := map[string]interface{}{"token": token, "client": client}
+	return helpers.SendResponse(c, fiber.StatusCreated, "Successfully Logged in", response)
+
 }
-
-// func SignUp(c *fiber.Ctx) error {
-// 	type NewUser struct {
-// 		Role     string `json:"role"`
-// 		Email    string `json:"email"`
-// 		Password string `json:"password"`
-// 	}
-
-// 	// user := new(models.Client)
-// 	user := new(NewUser)
-// 	if err := c.BodyParser(user); err != nil {
-// 		return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Invalid input", "data": err})
-// 	}
-
-// 	hash, err := hashPassword(user.Password)
-// 	if err != nil {
-// 		return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Couldn't hash password", "data": err})
-// 	}
-
-// 	if user.Role == "client" {
-// 		newClient := new(models.Client)
-// 		if err := c.BodyParser(newClient); err != nil {
-// 			return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Invalid input", "data": err})
-// 		}
-// 		newClient.Password = hash
-
-// 		err = repositories.CreateClient(newClient)
-
-// 		if err != nil {
-// 			return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Couldn't create client", "data": err})
-// 		}
-// 		return c.JSON(fiber.Map{"status": "success", "message": "Created Client", "data": newClient})
-
-// 	} else {
-// 		newLawyer := new(models.Lawyer)
-// 		if err := c.BodyParser(newLawyer); err != nil {
-// 			return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Invalid input", "data": err})
-// 		}
-
-// 		newLawyer.Password = hash
-
-// 		err = repositories.CreateLayer(newLawyer)
-// 		if err != nil {
-// 			return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Couldn't create lawyer", "data": err})
-// 		}
-
-// 		return c.JSON(fiber.Map{"status": "success", "message": "Created lawyer", "data": newLawyer})
-
-// 	}
-
-// }

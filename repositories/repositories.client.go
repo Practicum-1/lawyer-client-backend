@@ -8,6 +8,19 @@ import (
 	"gorm.io/gorm"
 )
 
+func GetAllClients() (interface{}, error) {
+	db := db.GetDB()
+	var client []models.Client
+	result := db.Find(&client)
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		return nil, errors.New("404")
+	}
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return client, nil
+}
+
 func GetClientById(id uint64, client *models.Client) error {
 	db := db.GetDB()
 	result := db.Where("id = ?", id).First(&client)

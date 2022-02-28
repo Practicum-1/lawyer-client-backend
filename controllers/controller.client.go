@@ -10,16 +10,28 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func GetClientById(c *fiber.Ctx) error {
-	id := c.Params("id")
+func GetAllClients(c *fiber.Ctx) error {
 
-	intId, err := strconv.ParseUint(id, 10, 32)
+	client, err := repositories.GetAllClients()
+	if err != nil {
+		if err.Error() == "404" {
+			return helpers.SendResponse(c, fiber.StatusNotFound, "No client found", nil)
+		} else {
+			return helpers.SendResponse(c, fiber.StatusBadRequest, err.Error(), err)
+		}
+	}
+	return helpers.SendResponse(c, fiber.StatusOK, "success", client)
+}
+
+func GetClientById(c *fiber.Ctx) error {
+
+	id, err := strconv.ParseUint(c.Params("id"), 10, 32)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "fail", "response": "Invalid Id"})
 	}
 
 	var client models.Client
-	err = repositories.GetClientById(intId, &client)
+	err = repositories.GetClientById(id, &client)
 	if err != nil {
 		if err.Error() == "404" {
 			c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "fail", "msg": "Client not found"})

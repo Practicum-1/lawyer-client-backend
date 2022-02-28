@@ -1,6 +1,8 @@
 package seeds
 
-import "github.com/Practicum-1/lawyer-client-backend.git/models"
+import (
+	"github.com/Practicum-1/lawyer-client-backend.git/models"
+)
 
 func SeedLanguages() {
 	var count int64

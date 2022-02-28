@@ -26,7 +26,7 @@ func (client *Client) BeforeCreate(tx *gorm.DB) error { //Validate the client be
 	var count int64
 	DB.Model(&client).Where("email = ? OR phone = ?", client.Email, client.Phone).Count(&count)
 	if count != 0 {
-		return errors.New("User already exists with this email or phone number")
+		return errors.New("user already exists with this email or phone number")
 	}
 	hashedPassword, err := helpers.HashPassword(client.Password)
 	if err != nil {

@@ -1,7 +1,11 @@
 package models
 
 import (
+	"errors"
 	"time"
+
+	"github.com/Practicum-1/lawyer-client-backend.git/helpers"
+	"gorm.io/gorm"
 )
 
 type Lawyer struct {
@@ -26,4 +30,18 @@ type Lawyer struct {
 	ConnectedClients []LawyerClientRelation `gorm:"foreignKey:LawyerID" json:"connected_lawyers"`
 	CreatedAt        time.Time              `gorm:"" json:"created_at"`
 	UpdatedAt        time.Time              `gorm:"" json:"updated_at"`
+}
+
+func (client *Lawyer) BeforeCreate(tx *gorm.DB) error { //Validate the client before creating it
+	var count int64
+	DB.Model(&client).Where("email = ? OR phone = ?", client.Email, client.Phone).Count(&count)
+	if count != 0 {
+		return errors.New("lawyer already exists with this email or phone number")
+	}
+	hashedPassword, err := helpers.HashPassword(client.Password)
+	if err != nil {
+		return err
+	}
+	client.Password = hashedPassword
+	return nil
 }
