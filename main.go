@@ -1,11 +1,14 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 
 	"github.com/Practicum-1/lawyer-client-backend.git/db"
+	"github.com/Practicum-1/lawyer-client-backend.git/models"
 	"github.com/Practicum-1/lawyer-client-backend.git/routes"
+	"github.com/Practicum-1/lawyer-client-backend.git/seeds"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/joho/godotenv"
@@ -15,6 +18,8 @@ func setupRoutes(app *fiber.App) {
 	routes.ClientRoutes(app.Group("/client"))
 	routes.LawyerRoutes(app.Group("/lawyer"))
 	routes.RequestRoutes(app.Group("/request"))
+	routes.AuthRoutes(app.Group("/auth"))
+	routes.PublicRoutes(app.Group("/public"))
 }
 
 func main() {
@@ -25,16 +30,22 @@ func main() {
 	}
 
 	db.ConnectDB()
+	models.Migrate()
+	seeds.RunSeeds()
 
 	app := fiber.New()
 
 	app.Use(logger.New())
 
 	app.Get("/", func(c *fiber.Ctx) error {
-		return c.Status(fiber.StatusOK).JSON(fiber.Map{"msg": "server running on"})
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{"msg": fmt.Sprintf("server running on %s", os.Getenv("PORT"))})
 	})
 
 	setupRoutes(app)
 
-	log.Fatal(app.Listen(os.Getenv("PORT")))
+	err = app.Listen(os.Getenv("PORT"))
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("server running on", os.Getenv("PORT"))
 }
