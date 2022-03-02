@@ -16,7 +16,5 @@ func GetUserByEmail(model interface{}, e string) error {
 		}
 		return err
 	}
-
 	return nil
-
 }

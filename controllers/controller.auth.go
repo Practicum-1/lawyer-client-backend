@@ -7,40 +7,58 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func ClientLogin(c *fiber.Ctx) error {
+type LoginInput struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+	Role     string `json:"role"` //either  lawyer or client
+}
 
-	type LoginInput struct {
-		Email    string `json:"email"`
-		Password string `json:"password"`
-	}
+func UserLogin(c *fiber.Ctx) error {
 	var input LoginInput
-	var client models.Client
 
 	//Parse the body
 	if err := c.BodyParser(&input); err != nil {
 		return helpers.SendResponse(c, fiber.StatusBadRequest, "Invalid input", err)
 	}
-
-	// check if user exist
-	err := repositories.GetUserByEmail(&client, input.Email)
-
+	var response interface{}
+	var err error
+	if input.Role == helpers.ENUM_ROLE_TYPE["LAWYER"] {
+		response, err = lawyerLogin(input)
+	} else {
+		response, err = clientLogin(input)
+	}
 	if err != nil {
-		return helpers.SendResponse(c, fiber.StatusUnauthorized, "Invalid Email or Password", nil)
+		return helpers.SendResponse(c, fiber.StatusBadRequest, err.Error(), err)
 	}
 
-	// check if password is correct
-	if !helpers.CheckPasswordHash(input.Password, client.Password) {
-		return helpers.SendResponse(c, fiber.StatusUnauthorized, "Invalid Email or Password", nil)
-	}
-
-	//Generate token
-	token, err := helpers.GenerateToken(client.ID, client.Email)
-	if err != nil {
-		return helpers.SendResponse(c, fiber.StatusBadRequest, "Failed to generate token", err)
-	}
-
-	//create map string interface
-	response := map[string]interface{}{"token": token, "client": client}
 	return helpers.SendResponse(c, fiber.StatusCreated, "Successfully Logged in", response)
 
+}
+
+func lawyerLogin(input LoginInput) (map[string]interface{}, error) {
+	var lawyer models.Lawyer
+	err := repositories.GetUserByEmail(&lawyer, input.Email)
+	if err != nil {
+		return nil, err
+	}
+	token, err := helpers.GenerateToken(lawyer.ID, lawyer.Email)
+	if err != nil {
+		return nil, err
+	}
+	response := map[string]interface{}{"token": token, "lawyer": lawyer}
+	return response, nil
+}
+
+func clientLogin(input LoginInput) (map[string]interface{}, error) {
+	var client models.Client
+	err := repositories.GetUserByEmail(&client, input.Email)
+	if err != nil {
+		return nil, err
+	}
+	token, err := helpers.GenerateToken(client.ID, client.Email)
+	if err != nil {
+		return nil, err
+	}
+	response := map[string]interface{}{"token": token, "client": client}
+	return response, nil
 }

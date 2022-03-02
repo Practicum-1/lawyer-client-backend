@@ -61,17 +61,8 @@ func CreateClient(c *fiber.Ctx) error {
 
 	//Generate token
 	fmt.Println("newClient: ", newClient)
-	token, err := helpers.GenerateToken(newClient.ID, newClient.Email)
 
-	if err != nil {
-		return helpers.SendResponse(c, fiber.StatusBadRequest, "Failed to generate token", err)
-	}
-
-	//create map string interface
-
-	response := map[string]interface{}{"token": token}
-
-	return helpers.SendResponse(c, fiber.StatusCreated, "Client Created Successfully", response)
+	return helpers.SendResponse(c, fiber.StatusCreated, "Client Created Successfully", nil)
 }
 
 /* a function which accepts 3 parameters

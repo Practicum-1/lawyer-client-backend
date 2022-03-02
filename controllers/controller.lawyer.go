@@ -59,17 +59,5 @@ func CreateLawyer(c *fiber.Ctx) error {
 		return helpers.SendResponse(c, fiber.StatusBadRequest, err.Error(), nil)
 	}
 
-	//Generate token
-	fmt.Println("newClient: ", newClient)
-	token, err := helpers.GenerateToken(newClient.ID, newClient.Email)
-
-	if err != nil {
-		return helpers.SendResponse(c, fiber.StatusBadRequest, "Failed to generate token", err)
-	}
-
-	//create map string interface
-
-	response := map[string]interface{}{"token": token}
-
-	return helpers.SendResponse(c, fiber.StatusCreated, "Lawyer Created Successfully", response)
+	return helpers.SendResponse(c, fiber.StatusCreated, "Lawyer Created Successfully", nil)
 }
