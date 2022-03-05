@@ -45,15 +45,15 @@ func GetLawyerById(c *fiber.Ctx) error {
 }
 
 func CreateLawyer(c *fiber.Ctx) error {
-	newClient := &models.Lawyer{}
+	newLawyer := &models.Lawyer{}
 
 	//Parse the body
-	if err := c.BodyParser(newClient); err != nil {
+	if err := c.BodyParser(newLawyer); err != nil {
 		return helpers.SendResponse(c, fiber.StatusBadRequest, "Invalid input", err)
 	}
-
+	fmt.Println("newLawyer", newLawyer)
 	//Create Client
-	err := repositories.CreateLawyer(newClient)
+	err := repositories.CreateLawyer(newLawyer)
 	fmt.Println("Error: ", err)
 	if err != nil {
 		return helpers.SendResponse(c, fiber.StatusBadRequest, err.Error(), nil)

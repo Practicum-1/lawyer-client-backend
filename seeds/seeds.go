@@ -15,6 +15,7 @@ func RunSeeds() {
 	SeedCourts()
 	SeedLanguages()
 	SeedPracticeArea()
+	SeedLocations()
 	SeedClients()
 	SeedLawyer()
 }

@@ -14,7 +14,7 @@ var lawyer = []models.Lawyer{
 	{
 		FirstName:  "Alie",
 		LastName:   "Voorhees",
-		Location:   "Baltimore",
+		LocationID: 4,
 		Email:      "alie@gmail.com",
 		Phone:      "+912211",
 		Password:   "lawyer123",
@@ -53,7 +53,7 @@ var lawyer = []models.Lawyer{
 	{
 		FirstName:  "Lian",
 		LastName:   "Vade",
-		Location:   "Asgard",
+		LocationID: 7,
 		Email:      "lian@gmail.com",
 		Phone:      "+911123123",
 		Password:   "lawyer123",
@@ -92,7 +92,7 @@ var lawyer = []models.Lawyer{
 	{
 		FirstName:  "John",
 		LastName:   "Jones",
-		Location:   "London",
+		LocationID: 8,
 		Email:      "john@gmail.com",
 		Phone:      "+912321321",
 		Password:   "lawyer123",

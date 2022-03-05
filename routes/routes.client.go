@@ -6,7 +6,7 @@ import (
 )
 
 func ClientRoutes(app fiber.Router) error {
-	app.Get("/", controllers.GetAllClients)
+	app.Get("/*", controllers.GetAllClients)
 	app.Get("/:id", controllers.GetClientById)
 	app.Post("/", controllers.CreateClient)
 	return nil

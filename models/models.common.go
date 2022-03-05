@@ -5,7 +5,7 @@ import (
 )
 
 type Court struct {
-	ID       uint   `gorm:"primaryKey" json:"id"`
+	ID       uint   `gorm:"primaryKey" json:"court_id"`
 	Name     string `gorm:"not null" json:"name"`
 	Type     string `gorm:"not null" json:"type"`
 	Location string `gorm:"not null" json:"location"`
@@ -23,4 +23,10 @@ type PracticeArea struct {
 	Name   string `gorm:"not null" json:"name"`
 	AvgFee string `gorm:"not null" json:"avg_fee"`
 	gorm.Model
+}
+
+type Location struct {
+	ID    uint   `gorm:"primaryKey" json:"location_id"`
+	City  string `gorm:"not null" json:"city"`
+	State string `gorm:"not null" json:"state"`
 }

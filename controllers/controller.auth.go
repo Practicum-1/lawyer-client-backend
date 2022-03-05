@@ -22,6 +22,11 @@ func UserLogin(c *fiber.Ctx) error {
 	}
 	var response interface{}
 	var err error
+
+	if !(input.Role == helpers.ENUM_ROLE_TYPE["LAWYER"] || input.Role == helpers.ENUM_ROLE_TYPE["CLIENT"]) {
+		return helpers.SendResponse(c, fiber.StatusBadRequest, "Invalid role", nil)
+	}
+
 	if input.Role == helpers.ENUM_ROLE_TYPE["LAWYER"] {
 		response, err = lawyerLogin(input)
 	} else {
