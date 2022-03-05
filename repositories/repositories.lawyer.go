@@ -23,6 +23,7 @@ func GetAllLawyers() (interface{}, error) {
 
 func GetLawyerById(id uint64, lawyer *models.Lawyer) error {
 	db := db.GetDB()
+	// result := db.Preload(clause.Associations).Where("id = ?", id).First(&lawyer)
 	result := db.Where("id = ?", id).First(&lawyer)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return errors.New("404")

@@ -6,7 +6,7 @@ import (
 )
 
 func LawyerRoutes(app fiber.Router) error {
-	app.Get("/*", controllers.GetAllLawyer)
+	app.Get("/", controllers.GetAllLawyer)
 	app.Get("/:id", controllers.GetLawyerById)
 	app.Post("/", controllers.CreateLawyer)
 
