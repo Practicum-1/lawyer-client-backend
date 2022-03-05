@@ -12,7 +12,7 @@ var DB *gorm.DB
 
 func Connect() {
 
-	dsn := fmt.Sprintf("root:%s@tcp(127.0.0.1:3306)/lawyer_client?charset=utf8mb4&parseTime=True&loc=Local", os.Getenv("MYSQL_PASSWORD"))
+	dsn := fmt.Sprintf("root:%s@tcp(127.0.0.1:3306)/%s?charset=utf8mb4&parseTime=True&loc=Local", os.Getenv("MYSQL_PASSWORD"), os.Getenv("MYSQL_DATABASE"))
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic(err)
