@@ -61,7 +61,7 @@ var lawyer = []models.Lawyer{
 		Education:  "LLB",
 		Experience: 10,
 		Languages: []models.Language{
-			{ID: 15},
+			{ID: 1},
 			{ID: 21},
 			{ID: 19},
 		},
