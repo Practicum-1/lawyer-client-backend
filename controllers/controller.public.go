@@ -1,7 +1,9 @@
 package controllers
 
 import (
+	"github.com/Practicum-1/lawyer-client-backend.git/db"
 	"github.com/Practicum-1/lawyer-client-backend.git/helpers"
+	"github.com/Practicum-1/lawyer-client-backend.git/models"
 	"github.com/Practicum-1/lawyer-client-backend.git/repositories"
 	"github.com/gofiber/fiber/v2"
 )
@@ -51,13 +53,19 @@ func GetSeededData(c *fiber.Ctx) error {
 	}
 	//loop on locations
 	parseCities := make(map[uint]interface{})
-	parseState := make(map[string]interface{})
+
 	for _, loc := range location {
 		parseCities[loc.ID] = loc.City
-		parseState[loc.State] = loc.State
 	}
 	response["cities"] = parseCities
-	response["states"] = parseState
 
 	return helpers.SendResponse(c, fiber.StatusOK, "Judiciary Data Fetched", response)
+}
+
+func Test(c *fiber.Ctx) error {
+	db := db.GetDB()
+	var result []map[string]interface{}
+	db.Model(&models.LawyerPracticeArea{}).Select("lawyer_id").Where("practice_area_id = ?", "").Scan(&result)
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"test": result})
 }

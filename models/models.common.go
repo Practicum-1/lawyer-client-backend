@@ -30,3 +30,12 @@ type Location struct {
 	City  string `gorm:"not null" json:"city"`
 	State string `gorm:"not null" json:"state"`
 }
+
+type Filters struct {
+	LocationID     uint
+	Gender         string
+	Experience     uint
+	LanguageID     uint
+	PracticeAreaID uint
+	CourtID        uint
+}

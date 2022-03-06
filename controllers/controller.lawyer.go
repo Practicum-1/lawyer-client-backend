@@ -61,3 +61,34 @@ func CreateLawyer(c *fiber.Ctx) error {
 
 	return helpers.SendResponse(c, fiber.StatusCreated, "Lawyer Created Successfully", nil)
 }
+
+func GetLawyerByFilter(c *fiber.Ctx) error {
+	//Parse the body
+	//get query
+	location_id, _ := strconv.ParseUint(c.Query("location_id"), 10, 64)
+	gender := c.Query("gender")
+	experience, _ := strconv.ParseUint(c.Query("experience"), 10, 64)
+	language_id, _ := strconv.ParseUint(c.Query("language_id"), 10, 64)
+	practice_area_id, _ := strconv.ParseUint(c.Query("practice_area_id"), 10, 64)
+	court_id, _ := strconv.ParseUint(c.Query("court_id"), 10, 64)
+
+	//fiber map
+	var filters models.Filters
+	filters.LocationID = uint(location_id)
+	filters.Gender = gender
+	filters.Experience = uint(experience)
+	filters.LanguageID = uint(language_id)
+	filters.PracticeAreaID = uint(practice_area_id)
+	filters.CourtID = uint(court_id)
+
+	lawyers, _ := repositories.GetLawyerByFilter(filters)
+
+	// if err != nil {
+	// 	if err.Error() == "404" {
+	// 		return helpers.SendResponse(c, fiber.StatusNotFound, "Lawyer not found", nil)
+	// 	} else {
+	// 		return helpers.SendResponse(c, fiber.StatusBadRequest, err.Error(), err)
+	// 	}
+	// }
+	return helpers.SendResponse(c, fiber.StatusOK, "success", lawyers)
+}

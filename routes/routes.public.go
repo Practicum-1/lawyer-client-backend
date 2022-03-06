@@ -11,6 +11,7 @@ func PublicRoutes(app fiber.Router) error {
 	fmt.Printf("%T", app)
 	app.Get("/dashboard", controllers.GetDashboardData)
 	app.Get("/seeded-data", controllers.GetSeededData)
+	app.Get("/test", controllers.Test)
 
 	return nil
 }
