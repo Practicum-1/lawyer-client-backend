@@ -70,3 +70,36 @@ func CreateLawyer(c *fiber.Ctx) error {
 	response := map[string]interface{}{"token": token, "lawyer": newLawyer}
 	return helpers.SendResponse(c, fiber.StatusCreated, "Lawyer Created Successfully", response)
 }
+
+func GetLawyerByFilter(c *fiber.Ctx) error {
+	//Parse the body
+	//get query
+	filters := make(map[string]string)
+	filters["location_id"] = c.Query("location_id")
+	filters["gender"] = c.Query("gender")
+	filters["experience"] = c.Query("experience")
+	filters["language_id"] = c.Query("language_id")
+	filters["practice_area_id"] = c.Query("practice_area_id")
+	filters["court_id"] = c.Query("court_id")
+
+	fmt.Println(filters)
+	//fiber map
+
+	// filters.LocationID = uint(location_id)
+	// filters.Gender = gender
+	// filters.Experience = uint(experience)
+	// filters.LanguageID = uint(language_id)
+	// filters.PracticeAreaID = uint(practice_area_id)
+	// filters.CourtID = uint(court_id)
+
+	lawyers, _ := repositories.GetLawyerByFilter(filters)
+
+	// if err != nil {
+	// 	if err.Error() == "404" {
+	// 		return helpers.SendResponse(c, fiber.StatusNotFound, "Lawyer not found", nil)
+	// 	} else {
+	// 		return helpers.SendResponse(c, fiber.StatusBadRequest, err.Error(), err)
+	// 	}
+	// }
+	return helpers.SendResponse(c, fiber.StatusOK, "success", lawyers)
+}
