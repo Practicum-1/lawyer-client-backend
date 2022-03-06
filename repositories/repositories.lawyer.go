@@ -3,7 +3,6 @@ package repositories
 import (
 	"errors"
 	"fmt"
-	"strconv"
 
 	"github.com/Practicum-1/lawyer-client-backend.git/db"
 	"github.com/Practicum-1/lawyer-client-backend.git/models"
@@ -51,21 +50,21 @@ func getIDs(lawyers []models.Lawyer) []uint {
 	return resultIDs
 }
 
-func GetLawyerByFilter(filters models.Filters) ([]models.Lawyer, error) {
+func GetLawyerByFilter(filters map[string]string) ([]models.Lawyer, error) {
 	db := db.GetDB()
 	var lawyers []models.Lawyer
 	var noOfAssociationFilters int = 0
 	var statement string = "SELECT * FROM lawyers WHERE 1=1"
-	if filters.Experience != 0 {
-		statement += " AND `experience` = " + strconv.Itoa(int(filters.Experience))
+	if filters["experience"] != "" {
+		statement += " AND `experience` = " + filters["experience"]
 	}
-	if filters.LocationID != 0 {
-		statement += " AND `location_id` = " + strconv.Itoa(int(filters.LocationID))
+	if filters["location_id"] != "" {
+		statement += " AND `location_id` = " + filters["location_id"]
 	}
-	if filters.Gender != "" {
-		statement += " AND `gender` = \"" + filters.Gender + "\""
+	if filters["gender"] != "" {
+		statement += " AND `gender` = \"" + filters["gender"] + "\""
 	}
-	if filters.PracticeAreaID != 0 {
+	if filters["practice_area_id"] != "" {
 		colName := func() string {
 			if noOfAssociationFilters == 0 {
 				return " `id`"
@@ -73,10 +72,10 @@ func GetLawyerByFilter(filters models.Filters) ([]models.Lawyer, error) {
 				return " `lawyer_id`"
 			}
 		}()
-		statement += " AND" + colName + " IN ( SELECT `lawyer_id` FROM lawyer_practice_areas WHERE practice_area_id = " + strconv.Itoa(int(filters.PracticeAreaID))
+		statement += " AND" + colName + " IN ( SELECT `lawyer_id` FROM `lawyer_practice_areas` WHERE `practice_area_id` = " + filters["practice_area_id"]
 		noOfAssociationFilters += 1
 	}
-	if filters.CourtID != 0 {
+	if filters["court_id"] != "" {
 		colName := func() string {
 			if noOfAssociationFilters == 0 {
 				return "`id`"
@@ -84,10 +83,10 @@ func GetLawyerByFilter(filters models.Filters) ([]models.Lawyer, error) {
 				return "`lawyer_id`"
 			}
 		}()
-		statement += " AND" + colName + " IN ( SELECT `lawyer_id` FROM lawyer_courts WHERE court_id = " + strconv.Itoa(int(filters.CourtID))
+		statement += " AND" + colName + " IN ( SELECT `lawyer_id` FROM `lawyer_courts` WHERE `court_id` = " + filters["court_id"]
 		noOfAssociationFilters += 1
 	}
-	if filters.LanguageID != 0 {
+	if filters["language_id"] != "" {
 		colName := func() string {
 			if noOfAssociationFilters == 0 {
 				return "`id`"
@@ -95,7 +94,7 @@ func GetLawyerByFilter(filters models.Filters) ([]models.Lawyer, error) {
 				return "`lawyer_id`"
 			}
 		}()
-		statement += " AND" + colName + " IN ( SELECT `lawyer_id` FROM lawyer_languages WHERE language_id = " + strconv.Itoa(int(filters.LanguageID))
+		statement += " AND" + colName + " IN ( SELECT `lawyer_id` FROM `lawyer_languages` WHERE `language_id` = " + filters["language_id"]
 		noOfAssociationFilters += 1
 	}
 	for i := 0; i < noOfAssociationFilters; i++ {

@@ -65,21 +65,23 @@ func CreateLawyer(c *fiber.Ctx) error {
 func GetLawyerByFilter(c *fiber.Ctx) error {
 	//Parse the body
 	//get query
-	location_id, _ := strconv.ParseUint(c.Query("location_id"), 10, 64)
-	gender := c.Query("gender")
-	experience, _ := strconv.ParseUint(c.Query("experience"), 10, 64)
-	language_id, _ := strconv.ParseUint(c.Query("language_id"), 10, 64)
-	practice_area_id, _ := strconv.ParseUint(c.Query("practice_area_id"), 10, 64)
-	court_id, _ := strconv.ParseUint(c.Query("court_id"), 10, 64)
+	filters := make(map[string]string)
+	filters["location_id"] = c.Query("location_id")
+	filters["gender"] = c.Query("gender")
+	filters["experience"] = c.Query("experience")
+	filters["language_id"] = c.Query("language_id")
+	filters["practice_area_id"] = c.Query("practice_area_id")
+	filters["court_id"] = c.Query("court_id")
 
+	fmt.Println(filters)
 	//fiber map
-	var filters models.Filters
-	filters.LocationID = uint(location_id)
-	filters.Gender = gender
-	filters.Experience = uint(experience)
-	filters.LanguageID = uint(language_id)
-	filters.PracticeAreaID = uint(practice_area_id)
-	filters.CourtID = uint(court_id)
+
+	// filters.LocationID = uint(location_id)
+	// filters.Gender = gender
+	// filters.Experience = uint(experience)
+	// filters.LanguageID = uint(language_id)
+	// filters.PracticeAreaID = uint(practice_area_id)
+	// filters.CourtID = uint(court_id)
 
 	lawyers, _ := repositories.GetLawyerByFilter(filters)
 
