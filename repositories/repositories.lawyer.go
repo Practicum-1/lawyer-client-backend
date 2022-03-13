@@ -7,6 +7,7 @@ import (
 	"github.com/Practicum-1/lawyer-client-backend.git/db"
 	"github.com/Practicum-1/lawyer-client-backend.git/models"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 func GetAllLawyers() (interface{}, error) {
@@ -24,8 +25,8 @@ func GetAllLawyers() (interface{}, error) {
 
 func GetLawyerById(id uint64, lawyer *models.Lawyer) error {
 	db := db.GetDB()
-	// result := db.Preload(clause.Associations).Where("id = ?", id).First(&lawyer)
-	result := db.Where("id = ?", id).First(&lawyer)
+	result := db.Preload(clause.Associations).Where("id = ?", id).First(&lawyer)
+	// result := db.Model(&models.Lawyer{}).Joins("JOIN lawyer_practice_areas ON `lawyer_practice_areas.lawyer_id` = `lawyers.id`").Find(&lawyer)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return errors.New("404")
 	}
@@ -41,14 +42,6 @@ func CreateLawyer(lawyer *models.Lawyer) error {
 		return result.Error
 	}
 	return nil
-}
-
-func getIDs(lawyers []models.Lawyer) []uint {
-	var resultIDs []uint
-	for _, lawyer := range lawyers {
-		resultIDs = append(resultIDs, lawyer.ID)
-	}
-	return resultIDs
 }
 
 func GetLawyerByFilter(filters map[string]string) ([]models.Lawyer, error) {
