@@ -6,7 +6,9 @@ import (
 )
 
 func RequestRoutes(app fiber.Router) error {
-	app.Get("/", controllers.GetRequest)
-
+	app.Get("/:id", controllers.GetRequest)
+	app.Post("/", controllers.CreateRequest)
+	app.Delete("/:id", controllers.DeleteRequest)
+	app.Patch("/:status/:id", controllers.ChangeRequestStatus)
 	return nil
 }
