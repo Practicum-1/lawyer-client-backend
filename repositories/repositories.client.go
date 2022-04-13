@@ -22,9 +22,21 @@ func GetAllClients() (interface{}, error) {
 	return client, nil
 }
 
-func GetClientById(id uint64, client *models.Client) error {
+func GetClientById[IDType uint64 | string](id IDType, client *models.Client) error {
 	db := db.GetDB()
 	result := db.Preload(clause.Associations).Where("id = ?", id).First(&client)
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		return errors.New("404")
+	}
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
+}
+
+func GetClientByEmail(email string, client *models.Client) error {
+	db := db.GetDB()
+	result := db.Preload(clause.Associations).Where("email = ?", email).First(&client)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return errors.New("404")
 	}

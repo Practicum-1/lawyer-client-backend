@@ -57,3 +57,15 @@ func SetRequestStatus(id interface{}, status string) error {
 	}
 	return nil
 }
+
+func UpdateRequest(id interface{}, request *models.Request) error {
+	db := db.GetDB()
+	result := db.Where("id = ? ", id).Updates(request)
+	if result.Error != nil {
+		return result.Error
+	}
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
+}

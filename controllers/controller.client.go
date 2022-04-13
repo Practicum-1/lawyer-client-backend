@@ -11,7 +11,6 @@ import (
 )
 
 func GetAllClients(c *fiber.Ctx) error {
-
 	client, err := repositories.GetAllClients()
 	if err != nil {
 		if err.Error() == "404" {

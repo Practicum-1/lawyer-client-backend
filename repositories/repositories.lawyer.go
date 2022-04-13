@@ -23,10 +23,21 @@ func GetAllLawyers() (interface{}, error) {
 	return lawyer, nil
 }
 
-func GetLawyerById(id uint64, lawyer *models.Lawyer) error {
+func GetLawyerById[IDType string | uint64](id IDType, lawyer *models.Lawyer) error {
 	db := db.GetDB()
 	result := db.Preload(clause.Associations).Where("id = ?", id).First(&lawyer)
-	// result := db.Model(&models.Lawyer{}).Joins("JOIN lawyer_practice_areas ON `lawyer_practice_areas.lawyer_id` = `lawyers.id`").Find(&lawyer)
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		return errors.New("404")
+	}
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
+}
+
+func GetLawyerByEmail(email string, lawyer *models.Lawyer) error {
+	db := db.GetDB()
+	result := db.Preload(clause.Associations).Where("email = ?", email).First(&lawyer)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return errors.New("404")
 	}

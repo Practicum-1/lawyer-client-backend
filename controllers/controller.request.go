@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/Practicum-1/lawyer-client-backend.git/helpers"
 	"github.com/Practicum-1/lawyer-client-backend.git/models"
@@ -21,9 +22,18 @@ func GetRequest(c *fiber.Ctx) error {
 func CreateRequest(c *fiber.Ctx) error {
 	request := &models.Request{}
 	err := c.BodyParser(&request)
-	helpers.PrettyPrint(request)
 	if err != nil {
 		return helpers.SendResponse(c, fiber.StatusBadRequest, "invalid input", nil)
+	}
+	headers := c.GetReqHeaders()
+	client_id := headers["Id"]
+	//convert string to uint
+	client_id_uint, err := strconv.ParseUint(client_id, 10, 32)
+	// request.ClientID =
+	request.ClientID = uint(client_id_uint)
+	helpers.PrettyPrint(request)
+	if err != nil {
+		return helpers.SendResponse(c, fiber.StatusBadRequest, "Parsing Issue", nil)
 	}
 	err = repositories.CreateRequest(request)
 	if err != nil {
@@ -52,4 +62,18 @@ func ChangeRequestStatus(c *fiber.Ctx) error {
 		return helpers.SendResponse(c, fiber.StatusOK, fmt.Sprintf("Request Status changed to %s for %s", status, id), nil)
 	}
 	return helpers.SendResponse(c, fiber.StatusBadRequest, "invalid status", nil)
+}
+
+func UpdateRequest(c *fiber.Ctx) error {
+	id := c.Params("id")
+	request := &models.Request{}
+	err := c.BodyParser(&request)
+	if err != nil {
+		return helpers.SendResponse(c, fiber.StatusBadRequest, "invalid input", nil)
+	}
+	err = repositories.UpdateRequest(id, request)
+	if err != nil {
+		return helpers.SendResponse(c, fiber.StatusBadRequest, "unable to update request", nil)
+	}
+	return helpers.SendResponse(c, fiber.StatusOK, "request updated", nil)
 }
