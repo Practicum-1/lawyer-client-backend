@@ -6,6 +6,7 @@ import (
 	"github.com/Practicum-1/lawyer-client-backend.git/models"
 	"github.com/Practicum-1/lawyer-client-backend.git/repositories"
 	"github.com/gofiber/fiber/v2"
+	"gorm.io/gorm/clause"
 )
 
 func GetDashboardData(c *fiber.Ctx) error {
@@ -64,8 +65,7 @@ func GetSeededData(c *fiber.Ctx) error {
 
 func Test(c *fiber.Ctx) error {
 	db := db.GetDB()
-	var result []map[string]interface{}
-	db.Model(&models.LawyerPracticeArea{}).Select("lawyer_id").Where("practice_area_id = ?", "").Scan(&result)
-
+	var result []models.LawyerPracticeArea
+	db.Model(&models.LawyerPracticeArea{}).Preload(clause.Associations).Find(&result)
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{"test": result})
 }
