@@ -7,12 +7,13 @@ import (
 	"github.com/Practicum-1/lawyer-client-backend.git/db"
 	"github.com/Practicum-1/lawyer-client-backend.git/models"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 func GetAllLawyers() (interface{}, error) {
 	db := db.GetDB()
 	var lawyer []models.Lawyer
-	result := db.Find(&lawyer)
+	result := db.Preload(clause.Associations).Find(&lawyer)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return nil, errors.New("404")
 	}
@@ -24,8 +25,8 @@ func GetAllLawyers() (interface{}, error) {
 
 func GetLawyerById(id uint64, lawyer *models.Lawyer) error {
 	db := db.GetDB()
-	// result := db.Preload(clause.Associations).Where("id = ?", id).First(&lawyer)
-	result := db.Where("id = ?", id).First(&lawyer)
+	result := db.Preload(clause.Associations).Where("id = ?", id).First(&lawyer)
+	// result := db.Where("id = ?", id).First(&lawyer)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return errors.New("404")
 	}
@@ -103,7 +104,7 @@ func GetLawyerByFilter(filters map[string]string) ([]models.Lawyer, error) {
 	}
 	statement += ";"
 	fmt.Println(statement)
-	result := db.Raw(statement).Find(&lawyers)
+	result := db.Preload(clause.Associations).Raw(statement).Find(&lawyers)
 	fmt.Println("RowsAffected", result.RowsAffected)
 
 	return lawyers, nil

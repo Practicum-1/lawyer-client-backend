@@ -10,6 +10,7 @@ import (
 	"github.com/Practicum-1/lawyer-client-backend.git/routes"
 	"github.com/Practicum-1/lawyer-client-backend.git/seeds"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/joho/godotenv"
 )
@@ -34,6 +35,7 @@ func main() {
 	seeds.RunSeeds()
 
 	app := fiber.New()
+	app.Use(cors.New())
 
 	app.Use(logger.New())
 
