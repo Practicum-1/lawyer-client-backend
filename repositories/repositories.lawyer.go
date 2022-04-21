@@ -13,7 +13,7 @@ import (
 func GetAllLawyers() (interface{}, error) {
 	db := db.GetDB()
 	var lawyer []models.Lawyer
-	result := db.Find(&lawyer)
+	result := db.Preload(clause.Associations).Preload("PracticeAreas.PracticeArea").Find(&lawyer)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return nil, errors.New("404")
 	}
@@ -107,7 +107,7 @@ func GetLawyerByFilter(filters map[string]string) ([]models.Lawyer, error) {
 	}
 	statement += ";"
 	fmt.Println(statement)
-	result := db.Raw(statement).Find(&lawyers)
+	result := db.Preload(clause.Associations).Raw(statement).Find(&lawyers)
 	fmt.Println("RowsAffected", result.RowsAffected)
 
 	return lawyers, nil
