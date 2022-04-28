@@ -25,7 +25,7 @@ type Client struct {
 
 func (client *Client) BeforeCreate(tx *gorm.DB) error { //Validate the client before creating it
 	var count int64
-	DB.Model(&client).Where("email = ? OR phone = ?", client.Email, client.Phone).Count(&count)
+	tx.Model(&client).Where("email = ? OR phone = ?", client.Email, client.Phone).Count(&count)
 	if count != 0 {
 		return errors.New("user already exists with this email or phone number")
 	}
