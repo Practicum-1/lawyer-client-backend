@@ -76,7 +76,7 @@ func ClientAuth(c *fiber.Ctx) error {
 	//convert float64 to string
 	id := strconv.FormatFloat(jwtMapClaims["id"].(float64), 'f', -1, 64)
 	client := models.Client{}
-	err = repositories.GetClientById(string(jwtMapClaims["email"].(string)), &client)
+	err = repositories.GetClientById(id, &client)
 	if err != nil || client.ID == 0 {
 		return helpers.SendResponse(c, fiber.StatusUnauthorized, "Unauthorized Not a Client", nil)
 	}

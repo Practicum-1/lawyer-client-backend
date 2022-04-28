@@ -3,6 +3,7 @@ package helpers
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -20,4 +21,12 @@ func CheckPasswordHash(password, hash string) bool {
 func PrettyPrint(i interface{}) {
 	s, _ := json.MarshalIndent(i, "", "\t")
 	fmt.Println(string(s))
+}
+
+func StringToUint(s string) (uint, error) {
+	i, err := strconv.ParseUint(s, 10, 32)
+	if err != nil {
+		return 0, err
+	}
+	return uint(i), nil
 }

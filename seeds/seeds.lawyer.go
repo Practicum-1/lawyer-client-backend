@@ -19,6 +19,7 @@ var lawyer = []models.Lawyer{
 		Phone:      "+912211",
 		Password:   "lawyer123",
 		Gender:     "female",
+		Rating:     0,
 		Education:  "LLM",
 		Experience: 5,
 		Languages: []models.Language{
@@ -47,6 +48,7 @@ var lawyer = []models.Lawyer{
 		Phone:      "+911123123",
 		Password:   "lawyer123",
 		Gender:     "male",
+		Rating:     0,
 		Education:  "LLB",
 		Experience: 10,
 		Languages: []models.Language{
@@ -86,6 +88,7 @@ var lawyer = []models.Lawyer{
 		Phone:      "+912321321",
 		Password:   "lawyer123",
 		Gender:     "female",
+		Rating:     0,
 		Education:  "Integrated LLB",
 		Experience: 12,
 		Languages: []models.Language{

@@ -16,14 +16,15 @@ import (
 )
 
 func setupRoutes(app *fiber.App) {
+	routes.PublicRoutes(app.Group("/public"))
+	routes.AuthRoutes(app.Group("/auth"))
 	routes.ClientRoutes(app.Group("/client"))
 	routes.LawyerRoutes(app.Group("/lawyer"))
 	routes.RequestRoutes(app.Group("/request"))
-	routes.AuthRoutes(app.Group("/auth"))
-	routes.PublicRoutes(app.Group("/public"))
+	routes.ReviewRoutes(app.Group("/review"))
 }
 
-func main() {
+func init() {
 	err := godotenv.Load()
 
 	if err != nil {
@@ -33,6 +34,10 @@ func main() {
 	db.ConnectDB()
 	models.Migrate()
 	seeds.RunSeeds()
+
+}
+
+func main() {
 
 	app := fiber.New()
 	app.Use(cors.New())
@@ -45,7 +50,7 @@ func main() {
 
 	setupRoutes(app)
 
-	err = app.Listen(os.Getenv("PORT"))
+	err := app.Listen(os.Getenv("PORT"))
 	if err != nil {
 		log.Fatal(err)
 	}

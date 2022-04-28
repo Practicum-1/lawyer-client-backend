@@ -14,7 +14,7 @@ type Lawyer struct {
 	LastName      string               `gorm:"type:varchar(100) not null" json:"last_name"`
 	FullName      string               `gorm:"->;type:text GENERATED ALWAYS AS (concat(first_name,' ',last_name)) VIRTUAL;" json:"full_name"`
 	LocationID    uint                 `gorm:"not null" json:"location_id"`
-	Location      Location             `gorm:"foreignKey:location_id" json:"location"`
+	Location      *Location            `gorm:"foreignKey:location_id" json:"location"`
 	Email         string               `gorm:"unique;not null" json:"email"`
 	Phone         string               `gorm:"type:varchar(100);not null" json:"phone"`
 	Password      string               `gorm:"type:varchar(100);not null" json:"password"`
@@ -23,6 +23,7 @@ type Lawyer struct {
 	Experience    uint                 `gorm:"not null" json:"experience"`
 	Verified      bool                 `gorm:"not null" json:"verified"`
 	Gender        string               `gorm:"not null" json:"gender"`
+	Rating        uint                 `json:"rating"`
 	Reviews       []Review             `gorm:"foreignKey:LawyerID" json:"reviews"`
 	Courts        []Court              `gorm:"many2many:lawyer_courts" json:"courts"`
 	Languages     []Language           `gorm:"many2many:lawyer_languages" json:"languages"`
