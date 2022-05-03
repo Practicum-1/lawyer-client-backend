@@ -54,7 +54,7 @@ func SetRequestStatus(id interface{}, status string) error {
 	request.Status = status
 	if status == "approve" {
 		fmt.Println("Ran")
-		err := CreateLawyerClientConnection(request.ClientID, request.LawyerID)
+		err := CreateLawyerClientConnection(request.LawyerID, request.ClientID)
 		if err != nil {
 			return err
 		}

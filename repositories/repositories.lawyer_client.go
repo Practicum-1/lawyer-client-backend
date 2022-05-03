@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/Practicum-1/lawyer-client-backend.git/db"
 	"github.com/Practicum-1/lawyer-client-backend.git/models"
@@ -10,26 +11,25 @@ import (
 
 func CreateLawyerClientConnection(lawyerID, clientID uint) error {
 	db := db.GetDB()
+	fmt.Println("lawyerID: ", lawyerID)
+	fmt.Println("clientID: ", clientID)
 	lawyerClient := &models.LawyerClient{
 		LawyerID: lawyerID,
 		ClientID: clientID,
 	}
-	result := db.Where("lawyer_id = ?", lawyerID).Where("client_id = ?", clientID).FirstOrCreate(&lawyerClient)
-	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-		lawyerClient = &models.LawyerClient{
-			LawyerID: lawyerID,
-			ClientID: clientID,
-		}
-		result = db.Create(lawyerClient)
-		if result.Error != nil {
-			return result.Error
-		}
-		return nil
-	} else if result.Error != nil {
-		return result.Error
+	tempLawyerClient := &models.LawyerClient{}
+	db.Model(&models.LawyerClient{}).Where("lawyer_id = ? and client_id = ?", lawyerID, clientID).Find(&tempLawyerClient)
+	if tempLawyerClient.ID != 0 {
+		return errors.New("client lawyer connection already exists")
 	} else {
-		return nil
+		fmt.Println("client lawyer conn doesnt exists...creating now...")
 	}
+	fmt.Println("lawyerClient: ", lawyerClient)
+	result := db.Model(&models.LawyerClient{}).Create(lawyerClient)
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
 }
 
 func GetAllClientsByLawyerID(lawyerID string) ([]models.LawyerClient, error) {
