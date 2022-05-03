@@ -10,5 +10,6 @@ func ClientRoutes(app fiber.Router) error {
 	app.Get("/", middleware.BasicAuth, controllers.GetAllClients)
 	app.Get("/:id", middleware.BasicAuth, controllers.GetClientById)
 	app.Post("/", controllers.CreateClient)
+	app.Get("/:id/lawyers", middleware.BasicAuth, controllers.GetAllLawyersByClientID)
 	return nil
 }

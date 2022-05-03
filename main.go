@@ -22,6 +22,7 @@ func setupRoutes(app *fiber.App) {
 	routes.LawyerRoutes(app.Group("/lawyer"))
 	routes.RequestRoutes(app.Group("/request"))
 	routes.ReviewRoutes(app.Group("/review"))
+	routes.LawyerClientRoutes(app.Group("/lawyer_client"))
 }
 
 func init() {

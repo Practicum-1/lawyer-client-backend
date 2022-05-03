@@ -69,9 +69,3 @@ func CreateClient(c *fiber.Ctx) error {
 	response := map[string]interface{}{"token": token, "lawyer": newClient}
 	return helpers.SendResponse(c, fiber.StatusCreated, "Client Created Successfully", response)
 }
-
-/* a function which accepts 3 parameters
-1) fiber Status
-2) msg
-3) data ---> Struct ---> marshalJSON send
-*/

@@ -1,6 +1,11 @@
 package models
 
-import "time"
+import (
+	"errors"
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type Chat struct {
 	ID             uint      `gorm:"primaryKey" json:"id"`
@@ -11,4 +16,12 @@ type Chat struct {
 	RepliedTo      *Chat     `gorm:"foreignKey:ReplyToID" json:"replied_to"`
 	CreatedAt      time.Time `json:"created_at"`
 	UpdatedAt      time.Time `json:"updated_at"`
+}
+
+func (c *Chat) BeforeCreate(tx *gorm.DB) error {
+	if c.LawyerClientID == 0 || c.Message == "" {
+		return errors.New("missing request payload")
+	}
+
+	return nil
 }

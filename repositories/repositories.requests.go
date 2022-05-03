@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/Practicum-1/lawyer-client-backend.git/db"
 	"github.com/Practicum-1/lawyer-client-backend.git/helpers"
@@ -51,6 +52,13 @@ func SetRequestStatus(id interface{}, status string) error {
 		return result.Error
 	}
 	request.Status = status
+	if status == "approve" {
+		fmt.Println("Ran")
+		err := CreateLawyerClientConnection(request.ClientID, request.LawyerID)
+		if err != nil {
+			return err
+		}
+	}
 	result = db.Save(request)
 	if result.Error != nil {
 		return result.Error
