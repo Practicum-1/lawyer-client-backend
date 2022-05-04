@@ -8,6 +8,7 @@ import (
 	"github.com/Practicum-1/lawyer-client-backend.git/helpers"
 	"github.com/Practicum-1/lawyer-client-backend.git/models"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 func CreateRequest(request *models.Request) error {
@@ -24,7 +25,7 @@ func CreateRequest(request *models.Request) error {
 func GetRequestById(id interface{}) (*models.Request, error) {
 	db := db.GetDB()
 	var request *models.Request
-	result := db.Model(&models.Request{}).Where("id = ?", id).First(&request)
+	result := db.Model(&models.Request{}).Preload(clause.Associations).Where("id = ?", id).First(&request)
 	helpers.PrettyPrint(result)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return nil, errors.New("404")

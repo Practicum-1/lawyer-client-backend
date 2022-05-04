@@ -53,7 +53,7 @@ func GetAllLawyersByClientID(clientID string) ([]models.LawyerClient, error) {
 	db := db.GetDB()
 	var lawyerClients *[]models.LawyerClient
 	// var lawyers []*models.Lawyer
-	result := db.Model(&models.LawyerClient{}).Preload("Client").Where("lawyer_id = ?", clientID).Find(&lawyerClients)
+	result := db.Model(&models.LawyerClient{}).Preload("Lawyer").Where("client_id = ?", clientID).Find(&lawyerClients)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return nil, errors.New("404")
 	} else if result.Error != nil {
